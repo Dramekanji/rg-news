@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+:root {
+  --bg: #ffffff;
+  --fg: #0b1320;
+}
+
+html { scroll-behavior: smooth; }
+body { @apply bg-white text-ink; }
+
+.container {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+a { @apply hover:opacity-90 transition; }
+.section-title { @apply text-2xl font-semibold mb-4; }
+.card { @apply rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm; }
+.card:hover { @apply shadow-md; }
+.badge { @apply inline-block text-xs font-medium uppercase tracking-wide text-gold; }
