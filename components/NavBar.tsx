@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
+import { useState } from "react";
 
 const links = [
   { href: "/", label: "Accueil" },
@@ -14,6 +15,7 @@ const links = [
 
 export function NavBar() {
   const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header className="border-b">
@@ -27,7 +29,7 @@ export function NavBar() {
           />
         </Link>
 
-        {/* Navigation - Center */}
+        {/* Navigation - Center (Desktop) */}
         <nav className="hidden md:flex items-center gap-5 absolute left-1/2 transform -translate-x-1/2">
           {links.map((l) => (
             <Link
@@ -43,8 +45,8 @@ export function NavBar() {
           ))}
         </nav>
 
-        {/* Contact Button - Right */}
-        <div className="ml-auto">
+        {/* Desktop Contact Button - Right */}
+        <div className="hidden md:block ml-auto">
           <Link
             href="/#contact"
             className="bg-gold text-white px-8 py-4 rounded-md text-md font-medium hover:bg-gold/90 transition-colors"
@@ -61,7 +63,67 @@ export function NavBar() {
             Contact
           </Link>
         </div>
+
+        {/* Mobile Hamburger/Cross Button */}
+        <button
+          className="md:hidden ml-auto p-2"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <div className="w-6 h-6 flex flex-col justify-center items-center">
+            {isMenuOpen ? (
+              // Cross icon
+              <>
+                <div className="w-6 h-0.5 bg-gray-800 transform rotate-45 absolute"></div>
+                <div className="w-6 h-0.5 bg-gray-800 transform -rotate-45 absolute"></div>
+              </>
+            ) : (
+              // Hamburger icon
+              <>
+                <div className="w-6 h-0.5 bg-gray-800 mb-1"></div>
+                <div className="w-6 h-0.5 bg-gray-800 mb-1"></div>
+                <div className="w-6 h-0.5 bg-gray-800"></div>
+              </>
+            )}
+          </div>
+        </button>
       </div>
+
+      {/* Mobile Navigation Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden border-t bg-white">
+          <nav className="container py-4 space-y-3">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={clsx(
+                  "block text-md hover:text-gold transition-colors py-2",
+                  pathname === l.href && "text-gold font-semibold"
+                )}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <Link
+              href="/#contact"
+              className="block bg-gold text-white px-4 py-3 rounded-md text-md font-medium hover:bg-gold/90 transition-colors mt-4"
+              onClick={(e) => {
+                setIsMenuOpen(false);
+                if (pathname === "/") {
+                  e.preventDefault();
+                  document.getElementById("contact")?.scrollIntoView({
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            >
+              Contact
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
